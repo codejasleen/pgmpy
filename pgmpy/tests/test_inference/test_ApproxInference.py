@@ -31,7 +31,7 @@ class TestApproxInferenceBN:
         ve_results = alarm_ve.query(variables=["HISTORY", "CVP"], joint=True)
         assert query_results.__eq__(ve_results, atol=0.01)
 
-        query_results = infer_alarm.query(variables=["HISTORY", "CVP"], samples=self.samples, joint=True)
+        query_results = infer_alarm.query(variables=["HISTORY", "CVP"], samples=samples, joint=True)
         assert query_results.__eq__(ve_results, atol=0.01)
 
         query_results = infer_alarm.query(variables=["HISTORY", "CVP"], joint=False)
@@ -39,7 +39,7 @@ class TestApproxInferenceBN:
         for var in ["HISTORY", "CVP"]:
             assert query_results[var].__eq__(ve_results[var], atol=0.01)
 
-        query_results = infer_alarm.query(variables=["HISTORY", "CVP"], samples=self.samples, joint=False)
+        query_results = infer_alarm.query(variables=["HISTORY", "CVP"], samples=samples, joint=False)
         for var in ["HISTORY", "CVP"]:
             assert query_results[var].__eq__(ve_results[var], atol=0.01)
 
@@ -54,6 +54,7 @@ class TestApproxInferenceBN:
             evidence={"PVSAT": "LOW"},
             samples=samples[samples.PVSAT == "LOW"],
             joint=True,
+            seed=42,
         )
         assert query_results.__eq__(ve_results, atol=0.01)
 
@@ -64,8 +65,9 @@ class TestApproxInferenceBN:
         query_results = infer_alarm.query(
             variables=["HISTORY", "CVP"],
             evidence={"PVSAT": "LOW"},
-            samples=self.samples[self.samples.PVSAT == "LOW"],
+            samples=samples[samples.PVSAT == "LOW"],
             joint=True,
+            seed=42,
         )
         assert query_results.__eq__(ve_results, atol=0.01)
 
@@ -79,6 +81,7 @@ class TestApproxInferenceBN:
             evidence={"PVSAT": "LOW"},
             samples=samples[samples.PVSAT == "LOW"],
             joint=False,
+            seed=42,
         )
         for var in ["HISTORY", "CVP"]:
             assert query_results[var].__eq__(ve_results[var], atol=0.01)
@@ -219,7 +222,7 @@ class TestApproxInferenceBNTorch:
 
     def test_query_evidence(self, setUp):
         infer_alarm, alarm_ve, samples = setUp
-        query_results = infer_alarm.query(variables=["HISTORY"], evidence={"PVSAT": "LOW"}, joint=True)
+        query_results = infer_alarm.query(variables=["HISTORY"], evidence={"PVSAT": "LOW"}, joint=True, seed=42)
         ve_results = alarm_ve.query(variables=["HISTORY"], evidence={"PVSAT": "LOW"}, joint=True)
         assert query_results.__eq__(ve_results, atol=0.01)
 
@@ -228,10 +231,11 @@ class TestApproxInferenceBNTorch:
             evidence={"PVSAT": "LOW"},
             samples=samples[samples.PVSAT == "LOW"],
             joint=True,
+            seed=42,
         )
         assert query_results.__eq__(ve_results, atol=0.01)
 
-        query_results = infer_alarm.query(variables=["HISTORY", "CVP"], evidence={"PVSAT": "LOW"}, joint=True)
+        query_results = infer_alarm.query(variables=["HISTORY", "CVP"], evidence={"PVSAT": "LOW"}, joint=True, seed=42)
         ve_results = alarm_ve.query(variables=["HISTORY", "CVP"], evidence={"PVSAT": "LOW"}, joint=True)
         assert query_results.__eq__(ve_results, atol=0.01)
 
@@ -240,10 +244,11 @@ class TestApproxInferenceBNTorch:
             evidence={"PVSAT": "LOW"},
             samples=samples[samples.PVSAT == "LOW"],
             joint=True,
+            seed=42,
         )
         assert query_results.__eq__(ve_results, atol=0.01)
 
-        query_results = infer_alarm.query(variables=["HISTORY", "CVP"], evidence={"PVSAT": "LOW"}, joint=False)
+        query_results = infer_alarm.query(variables=["HISTORY", "CVP"], evidence={"PVSAT": "LOW"}, joint=False, seed=42)
         ve_results = alarm_ve.query(variables=["HISTORY", "CVP"], evidence={"PVSAT": "LOW"}, joint=False)
         for var in ["HISTORY", "CVP"]:
             assert query_results[var].__eq__(ve_results[var], atol=0.01)
@@ -253,6 +258,7 @@ class TestApproxInferenceBNTorch:
             evidence={"PVSAT": "LOW"},
             samples=samples[samples.PVSAT == "LOW"],
             joint=False,
+            seed=42,
         )
         for var in ["HISTORY", "CVP"]:
             assert query_results[var].__eq__(ve_results[var], atol=0.01)
